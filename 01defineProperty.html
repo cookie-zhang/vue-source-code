@@ -1,0 +1,58 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-13 21:11:40
+ * @LastEditTime: 2020-07-13 21:42:27
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue-code/index.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>defineProperty</title>
+</head>
+<body>
+    <div id="app">
+        hello
+    </div>
+</body>
+</html>
+<script>
+    // 模拟vue data
+    let data = {
+        msg: 'hello'
+    }
+    // 模拟vue 实例
+    let vm = {}
+
+    // 数据劫持； 当访问或者设置 vm 中的成员的时候   做一些干预操作
+    Object.defineProperty(vm, 'msg', {
+        // 可枚举（可遍历）
+        enumerable: true,
+
+        // 可配置（可以使用detelte 删除， 可以通过defineProperty 重新定义）
+        configurable: true,
+
+        // 当获取值的时候执行
+        get() {
+            console.log('get', data.msg)
+            return data.msg
+        },
+
+        // 当设置值的时候执行
+        set(newValue) {
+            console.log('set', newValue)
+            if(data.msg === newValue){
+                return
+            }
+            data.msg = newValue
+            // 数据更改，更新dom的值
+            document.querySelector('#app').textContent = data.msg
+        }
+    })
+
+    vm.msg = 'test' // 设置值 调用 set
+    console.log(vm.msg) // 获取值 调用get
+</script>

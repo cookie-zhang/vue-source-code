@@ -1,0 +1,60 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-13 21:11:40
+ * @LastEditTime: 2020-07-13 21:51:05
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue-code/index.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>defineProperty</title>
+</head>
+<body>
+    <div id="app">
+        hello
+    </div>
+</body>
+</html>
+<script>
+    // 模拟vue data
+    let data = {
+        msg: 'hello',
+        count: 0
+    }
+    // 模拟vue 实例
+    let vm = {};
+
+    // 如何去处理data里面的多个数据  定义proxyData函数
+    proxyData(data);
+
+    function proxyData() {
+        // 遍历 data 对象的所有属性
+        Object.keys(data).forEach(key => {
+            // 把data 中的属性， 转换成vm 的setter/setter
+            Object.defineProperty(vm, key, {
+                enumerable: true,
+                configurable: true,
+                get() {
+                    console.log('get', key, data[key])
+                    return data[key]
+                },
+                set(newValue){
+                    console.log('set', key, newValue)
+                    if(newValue === data[key]) {
+                        return
+                    }
+                    data[key] = newValue
+                    document.querySelector('#app').textContent = data[key]
+                }
+            })
+        })
+        
+    }
+
+    vm.msg = 'hello world'
+    console.log(vm.msg)
+</script>
