@@ -1,0 +1,70 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-07-15 22:06:39
+ * @LastEditTime: 2020-07-15 22:52:56
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue-source-code/06观察者模式.html
+--> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>观察者模式</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    /*
+    观察者模式：
+        观察者（订阅者）- Watcher
+            update(): 当事件发生时，具体要做的事情
+        目标（发布者）- Dep
+            subs数组：存储所有的观察者
+            addSub()：添加观察者
+            notify(): 当事件发生， 调用所有观察者的update()
+        没有事件中心
+    */
+
+    // 发布者 dep：依赖的意思
+   class Dep {
+       constructor() {
+           // 记录所有的订阅者  数组的形式
+           this.subs = []
+       }
+
+       // 将所有的订阅者添加到数组里
+       addSub(sub) {
+           // 首先判断sub存不存在，然后订阅者是不是有update方法， 才能添加到subs数组里面
+            if(sub && sub.update){
+                this.subs.push(sub)
+            }
+       }
+
+       //当事件发生的时候通知所有的订阅者  调用订阅者的update方法  不需要任何的参数
+       notify() {
+            this.subs.forEach(sub=>{
+                sub.update()
+            })
+       }
+   }
+
+   // 订阅者
+   // 当事件发生的时候  让发布者来调用update  在update里面去更新试图等操作
+   class Watcher {
+       update() {
+           console.log('update')
+       }
+    }
+
+    // 测试
+    let dep = new Dep()
+    let watcher = new Watcher()
+    
+
+    dep.addSub(watcher)
+    dep.notify()
+</script>

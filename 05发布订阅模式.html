@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-07-13 22:41:10
- * @LastEditTime: 2020-07-14 21:36:45
+ * @LastEditTime: 2020-07-15 21:38:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue-source-code/04发布订阅模式.html
@@ -22,16 +22,33 @@
     // 事件触发器
     class EventEmitter  {
         constructor () {
+            // 存的是事件： {'click': [fn1, fn2], 'change': [fn]}
             this.subs = Object.create(null)
         }
-        // 注册事件
-        $on() {
-            
+        // 注册事件  每次调用的时候都会在同一个属性上去注册上对应的函数
+        $on(eventype, handler) {
+            this.subs[eventype] = this.subs[eventype] || []
+            this.subs[eventype].push(handler)
+            debugger
         }
 
-        // 触发事件
-        $emit() {
-            
+        // 触发事件   调用时会触发对应的属性的事件，并且会把对应的事件遍历一遍
+        $emit(eventype) {
+            if(this.subs[eventype]) {
+                this.subs[eventype].forEach(handler => {
+                    handler()
+                });
+            }
         }
     }
+
+    // 测试
+    let em = new EventEmitter()
+    em.$on('click', () => {
+        console.log('click1')
+    })
+    em.$on('click', () => {
+        console.log('click2')
+    })
+    em.$emit('click')
 </script>
